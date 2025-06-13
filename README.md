@@ -15,7 +15,7 @@ A modern AI-powered resume analysis platform with intelligent parsing capabiliti
 ## 🛠 Tech Stack
 
 ### Backend (`job-search-be/`)
-- **FastAPI 6.2.0**: Modern Python web framework
+- **FastAPI**: Modern Python web framework
 - **Python 3.8+**: Core language
 - **Google Generative AI**: Gemini-1.5-flash for multimodal parsing
 - **LibreOffice**: DOCX-to-PDF conversion in Docker
@@ -325,15 +325,6 @@ cd job-search-fe && pnpm dev:local
 docker-compose logs -f
 ```
 
-## 🤝 Contributing
-
-1. Clone the repository
-2. Create a feature branch
-3. Make changes in appropriate service directory
-4. Test locally with `./dev-start.sh`
-5. Test with Docker using `./dev-start.sh docker`
-6. Submit pull request
-
 ## 📄 License
 
 MIT License - see LICENSE file for details.
@@ -342,7 +333,6 @@ MIT License - see LICENSE file for details.
 
 - Check [DEVELOPMENT.md](./DEVELOPMENT.md) for hybrid development setup
 - Review [STARTUP_GUIDE.md](./STARTUP_GUIDE.md) for detailed startup instructions
-- Use `./dev-start.sh` without arguments for help
 - Review logs for error details
 
 ---

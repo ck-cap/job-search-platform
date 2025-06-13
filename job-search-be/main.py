@@ -21,7 +21,7 @@ load_dotenv()
 app = FastAPI(
     title="AI Resume Analyzer API",
     description="An API to upload, parse, and analyze resumes using a hybrid approach.",
-    version="6.2.0"  # Incremented version for filename fix
+    version="1.0.0"
 )
 
 # CORS Middleware
