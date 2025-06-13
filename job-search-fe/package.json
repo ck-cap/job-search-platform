@@ -4,12 +4,13 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "NUXT_PUBLIC_API_BASE_URL=http://localhost:8000 nuxt dev",
+    "dev:local": "NUXT_PUBLIC_API_BASE_URL=http://localhost:8000 nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "clean": "rm -rf .nuxt .output dist node_modules/.cache",
-    "fresh": "pnpm run clean && pnpm install && pnpm run dev",
+    "fresh": "pnpm run clean && pnpm install && pnpm run dev:local",
     "build:clean": "pnpm run clean && pnpm run build"
   },
   "dependencies": {

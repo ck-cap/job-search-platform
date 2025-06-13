@@ -3,16 +3,17 @@ import json
 import re
 import logging
 import tempfile
+import subprocess
 from pathlib import Path
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from docx2pdf import convert
 import google.generativeai as genai
 
 # Configure basic logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 # Load .env file and configure the API
 load_dotenv()
@@ -20,7 +21,7 @@ load_dotenv()
 app = FastAPI(
     title="AI Resume Analyzer API",
     description="An API to upload, parse, and analyze resumes using a hybrid approach.",
-    version="6.0.0"
+    version="6.2.0"  # Incremented version for filename fix
 )
 
 # CORS Middleware
@@ -38,10 +39,11 @@ try:
     if not api_key:
         raise ValueError("GOOGLE_API_KEY not found.")
     genai.configure(api_key=api_key)
-    logging.info("Google Generative AI client configured successfully.")
+    logger.info("Google Generative AI client configured successfully.")
 except ValueError as e:
-    logging.error(f"API Key Configuration Error: {e}")
+    logger.error(f"API Key Configuration Error: {e}")
 
+# This prompt now only asks the AI to parse the content, not provide the filename.
 ADVANCED_PROMPT = """
 You are a highly advanced and precise resume parsing system. Your task is to analyze the attached resume file and convert its content into a structured JSON object.
 
@@ -65,43 +67,69 @@ For each key (except "contact_info"), the value should be an object with two sub
 
 If a section cannot be found, the value for two sub-keys should be `null`.
 
-Required JSON Structure:
+Required JSON Structure (You should ONLY output this JSON structure):
 {
-    "filename": "[Filename]",
-    "parsed_data": {
-        "contact_info": {
-            "name": "[Name]",
-            "phone": "[Phone Number]",
-            "email": "[Email Address]",
-            "location": "[Location]"
-        },
-        "summary": {
-            "summary": "[Summary of Professional Background]",
-            "full_text": "[Detailed Professional Summary]"
-        },
-        "experience": {
-            "summary": "[Summary of Work Experience]",
-            "full_text": "[Detailed Description of Work Experience]"
-        },
-        "education": {
-            "summary": "[Summary of Educational Background]",
-            "full_text": "[Detailed Description of Education]"
-        },
-        "skills": {
-            "summary": "[Summary of Skills]",
-            "full_text": "[Detailed List of Skills]"
-        },
-        "projects": {
-            "summary": "[Summary of Projects]",
-            "full_text": "[Detailed Description of Projects]"
-        },
-        "certificates": {
-            "summary": "[Summary of Certificates]",
-            "full_text": "[Detailed List of Certificates]"
-        }
+    "contact_info": {
+        "name": "[Name]",
+        "phone": "[Phone Number]",
+        "email": "[Email Address]",
+        "location": "[Location]"
+    },
+    "summary": {
+        "summary": "[Summary of Professional Background]",
+        "full_text": "[Detailed Professional Summary]"
+    },
+    "experience": {
+        "summary": "[Summary of Work Experience]",
+        "full_text": "[Detailed Description of Work Experience]"
+    },
+    "education": {
+        "summary": "[Summary of Educational Background]",
+        "full_text": "[Detailed Description of Education]"
+    },
+    "skills": {
+        "summary": "[Summary of Skills]",
+        "full_text": "[Detailed List of Skills]"
+    },
+    "projects": {
+        "summary": "[Summary of Projects]",
+        "full_text": "[Detailed Description of Projects]"
+    },
+    "certificates": {
+        "summary": "[Summary of Certificates]",
+        "full_text": "[Detailed List of Certificates]"
     }
 }
 """
+
+def convert_docx_to_pdf_linux(docx_path: str, output_dir: str):
+    """
+    Converts a DOCX file to PDF using the LibreOffice command-line tool.
+    This is designed for a Linux/Docker environment where LibreOffice is installed.
+    """
+    logger.info(f"Attempting to convert {docx_path} to PDF in {output_dir}")
+    command = [
+        "libreoffice",
+        "--headless",          # Run without a GUI
+        "--convert-to", "pdf", # Specify the output format
+        "--outdir", output_dir, # Specify the output directory
+        docx_path,             # The input file
+    ]
+    try:
+        process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=30, check=True)
+        logger.info(f"LibreOffice stdout: {process.stdout.decode('utf-8')}")
+        pdf_filename = Path(docx_path).stem + ".pdf"
+        if not (Path(output_dir) / pdf_filename).exists():
+            raise FileNotFoundError("Conversion succeeded but output PDF not found.")
+    except FileNotFoundError:
+        logger.error("COMMAND NOT FOUND: 'libreoffice'. Is it installed in the container?")
+        raise
+    except subprocess.CalledProcessError as e:
+        logger.error(f"LibreOffice conversion failed. Stderr: {e.stderr.decode('utf-8')}")
+        raise
+    except subprocess.TimeoutExpired:
+        logger.error("LibreOffice conversion timed out after 30 seconds.")
+        raise
 
 async def robust_json_parser(response_text: str) -> dict:
     """A helper function to safely extract and parse JSON from an LLM's response."""
@@ -122,9 +150,9 @@ async def robust_json_parser(response_text: str) -> dict:
         logging.error(f"JSON Decode Error: {e}. Problematic string: {json_string}")
         raise ValueError("Failed to decode JSON from AI model response.")
 
-async def parse_resume_from_pdf_file(pdf_path: str, original_filename: str) -> dict:
-    """Saves a supported file (like PDF) temporarily and sends it to Gemini."""
-    logging.info(f"Using multimodal parsing for PDF file: {pdf_path}")
+async def parse_resume_from_pdf_file(pdf_path: str) -> dict:
+    """Sends a PDF file to Gemini for multimodal parsing."""
+    logger.info(f"Using multimodal parsing for PDF file: {pdf_path}")
     uploaded_file_gemini = None
     try:
         uploaded_file_gemini = await run_in_threadpool(genai.upload_file, path=pdf_path)
@@ -146,16 +174,15 @@ async def parse_resume_from_pdf_file(pdf_path: str, original_filename: str) -> d
 @app.post("/parse_resume")
 async def parse_resume_endpoint(file: UploadFile = File(...)):
     """
-    Processes a resume file. If it's a DOCX, it's converted to PDF first.
+    Processes a resume file. If it's a DOCX, it's converted to PDF first using LibreOffice.
     Then, the PDF is parsed using the multimodal LLM.
     """
-    logging.info(f"Received request for file: {file.filename} (MIME: {file.content_type})")
+    logger.info(f"Received request for file: {file.filename} (MIME: {file.content_type})")
     
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_dir_path = Path(temp_dir)
         original_file_path = temp_dir_path / file.filename
         
-        # Save the uploaded file to the temporary directory
         with open(original_file_path, "wb") as f:
             f.write(await file.read())
         
@@ -163,26 +190,31 @@ async def parse_resume_endpoint(file: UploadFile = File(...)):
 
         # If it's a docx, convert it to PDF
         if file.content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document" or file.filename.endswith(".docx"):
-            logging.info("DOCX file detected. Attempting to convert to PDF...")
-            pdf_path = original_file_path.with_suffix('.pdf')
+            logging.info("DOCX file detected. Attempting to convert to PDF via LibreOffice...")
             try:
-                # NOTE: For Docker, this requires LibreOffice to be installed in the container.
-                # Example Dockerfile command: RUN apt-get update && apt-get install -y libreoffice
-                await run_in_threadpool(convert, str(original_file_path), str(pdf_path))
-                pdf_to_process_path = pdf_path
+                # Use our new subprocess function
+                await run_in_threadpool(convert_docx_to_pdf_linux, str(original_file_path), str(temp_dir_path))
+                pdf_to_process_path = original_file_path.with_suffix('.pdf')
                 logging.info(f"Successfully converted to {pdf_to_process_path}")
             except Exception as e:
-                logging.exception("Failed to convert DOCX to PDF. Make sure LibreOffice (on Linux) or MS Word (on Windows) is installed.")
-                raise HTTPException(status_code=500, detail="Error converting DOCX to PDF.")
+                logging.exception("Failed to convert DOCX to PDF.")
+                raise HTTPException(status_code=500, detail=f"Error converting DOCX to PDF: {e}")
 
-        # Ensure we are working with a PDF before proceeding
         if pdf_to_process_path.suffix.lower() != ".pdf":
              raise HTTPException(status_code=400, detail=f"File type not supported for multimodal analysis: {file.filename}")
 
-        parsed_sections = await parse_resume_from_pdf_file(str(pdf_to_process_path), file.filename)
+        # The model now returns only the parsed data (contact_info, experience, etc.)
+        parsed_content_data = await parse_resume_from_pdf_file(str(pdf_to_process_path))
 
     logging.info(f"Successfully processed. Returning parsed data for {file.filename}.")
-    return {"filename": file.filename, "parsed_data": parsed_sections}
+    
+    # Construct the final, correct JSON response here.
+    final_response = {
+        "filename": file.filename,
+        "parsed_data": parsed_content_data
+    }
+
+    return final_response
 
 @app.post("/analyze_resume")
 async def analyze_resume_endpoint(data: dict):

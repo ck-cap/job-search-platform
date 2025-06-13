@@ -1,25 +1,24 @@
-# Job Search Platform
+# Resume Analysis Platform
 
-A modern AI-powered job search platform with resume analysis capabilities. Built as a monorepo with FastAPI backend and Nuxt.js frontend.
+A modern AI-powered resume analysis platform with intelligent parsing capabilities. Built as a monorepo with FastAPI backend and Nuxt.js frontend.
 
 ## 🌟 Features
 
-- **Resume Analysis**: AI-powered resume parsing and improvement suggestions
+- **Resume Analysis**: AI-powered resume parsing and improvement suggestions using Google Gemini
 - **File Upload Support**: PDF, DOC, DOCX formats (max 10MB)
 - **Intelligent Parsing**: Automatic section extraction and organization
-- **Action Verb Analysis**: Optimize resume language and impact
-- **Missing Sections Detection**: Comprehensive resume completeness check
-- **Export Reports**: Download analysis results as JSON
+- **Multimodal Processing**: Direct PDF analysis and DOCX-to-PDF conversion
+- **Structured Output**: JSON-formatted resume data with summaries
 - **Modern UI**: Responsive interface with real-time feedback
-- **Live Status Monitoring**: Backend connection status tracking
+- **Hybrid Development**: Optimized development workflow with Docker backend and local frontend
 
 ## 🛠 Tech Stack
 
 ### Backend (`job-search-be/`)
-- **FastAPI**: Modern Python web framework
+- **FastAPI 6.2.0**: Modern Python web framework
 - **Python 3.8+**: Core language
-- **pdfminer.six**: PDF text extraction
-- **python-docx**: DOCX file processing
+- **Google Generative AI**: Gemini-1.5-flash for multimodal parsing
+- **LibreOffice**: DOCX-to-PDF conversion in Docker
 - **Uvicorn**: ASGI server
 
 ### Frontend (`job-search-fe/`)
@@ -27,10 +26,10 @@ A modern AI-powered job search platform with resume analysis capabilities. Built
 - **Vue 3**: Progressive JavaScript framework
 - **TypeScript**: Type-safe development
 - **Tailwind CSS**: Utility-first styling
-- **Shadcn/ui**: Component library
+- **Shadcn/ui**: Component library via reka-ui
 
 ### Infrastructure
-- **Docker**: Containerized deployment
+- **Docker**: Containerized backend deployment
 - **pnpm**: Package management
 - **Git**: Version control (monorepo)
 
@@ -38,7 +37,7 @@ A modern AI-powered job search platform with resume analysis capabilities. Built
 
 - **Node.js** v18+ and **pnpm**
 - **Python** v3.8+ and **pip**
-- **Docker** & **Docker Compose** (optional)
+- **Docker** & **Docker Compose** (for backend)
 - **Git** for version control
 - **Google API Key** for AI resume analysis (required)
 
@@ -57,45 +56,51 @@ cp job-search-be/.env_template job-search-be/.env
 # https://aistudio.google.com/app/apikey
 ```
 
-### Automated Startup (Recommended)
+### Recommended Development Setup (Hybrid Mode)
 
-**Linux/macOS:**
+**All Platforms:**
 ```bash
-./start.sh           # Interactive mode
-./start.sh docker    # Docker deployment
-./start.sh local     # Local development
-```
-
-**Windows:**
-```cmd
-start.bat           # Interactive mode
-start.bat docker    # Docker deployment
-start.bat local     # Local development
+./dev-start.sh           # Hybrid mode: backend in Docker, frontend local
+./dev-start.sh docker    # Both services in Docker
+./dev-start.sh backend   # Only backend in Docker
+./dev-start.sh frontend  # Only frontend locally
 ```
 
 **NPM Scripts:**
 ```bash
 npm install          # Install root dependencies
-npm run dev         # Start both services
-npm run docker:up   # Docker deployment
+npm run dev         # Start hybrid development environment
+npm run start       # Alternative start command
+npm run stop        # Stop Docker services
+npm run logs        # View backend logs
+npm run restart     # Restart backend container
 ```
 
 ### Docker Deployment
 
 ```bash
-# Start all services
+# Start backend service in Docker
 docker-compose up --build
 
 # Background mode
 docker-compose up -d --build
 
-# Stop services
+# Stop backend service
 docker-compose down
+
+# Note: Frontend must be started separately with:
+# cd job-search-fe && pnpm dev:local
 ```
 
 ### Manual Development Setup
 
-**Backend:**
+**Backend (Docker - Recommended):**
+```bash
+# Ensure .env file is configured first
+docker-compose up -d backend
+```
+
+**Backend (Local):**
 ```bash
 cd job-search-be
 python -m venv venv
@@ -104,11 +109,11 @@ pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 ```
 
-**Frontend:**
+**Frontend (Local):**
 ```bash
 cd job-search-fe
 pnpm install
-pnpm dev
+pnpm dev:local
 ```
 
 ## 🌐 Access Points
@@ -120,50 +125,68 @@ pnpm dev
 ## 📖 Usage Guide
 
 1. **Upload Resume**: Drag & drop or click to upload (PDF/DOC/DOCX)
-2. **Parse Content**: Extract and organize resume sections
+2. **Parse Content**: Extract and organize resume sections using AI
 3. **Review Sections**: Verify parsed information accuracy
 4. **Analyze Resume**: Get AI-powered insights and recommendations
 5. **Export Results**: Download analysis report as JSON
 
-### Analysis Features
-- **Completeness Score**: 0-100% resume quality rating
-- **Missing Sections**: Identification of gaps
-- **Action Verb Analysis**: Language impact assessment
-- **Personalized Recommendations**: Tailored improvement suggestions
+### API Endpoints
+- **POST `/parse_resume`**: Upload and parse resume files
+- **POST `/analyze_resume`**: Analyze parsed resume data
+- **GET `/`**: Health check endpoint
+- **GET `/docs`**: Interactive API documentation
 
-## 🐳 Docker Configuration
+## 🐳 Development Workflow
 
-The project includes optimized Docker configuration:
+### Hybrid Mode (Recommended)
+- **Backend**: Runs in Docker for consistent environment and LibreOffice support
+- **Frontend**: Runs locally for fast hot reload and debugging
+- **Benefits**: Best of both worlds - consistency + performance
 
-- **Multi-stage builds** for production efficiency
-- **Development volumes** for hot reloading
-- **Environment-specific** configurations
-- **Network isolation** between services
+```bash
+./dev-start.sh           # Start hybrid mode
+./dev-start.sh stop      # Stop backend Docker container
+./dev-start.sh logs      # View backend logs
+./dev-start.sh restart   # Restart both services
+```
 
-See `docker-compose.yml` for complete configuration.
+### Docker Mode
+- **Backend**: Runs in Docker container
+- **Frontend**: Still runs locally (docker-compose only defines backend service)
+- **Use case**: Consistent backend environment testing
+
+```bash
+./dev-start.sh docker    # Start backend in Docker (frontend still local)
+docker-compose logs -f   # View backend logs
+```
 
 ## 📁 Project Structure
 
 ```
-job-search-platform/                # Monorepo root
+resume-analyzer-platform/          # Monorepo root
 ├── .git/                          # Git repository
 ├── .gitignore                     # Git ignore rules
-├── package.json                   # Root workspace config
+├── package.json                   # Root workspace config (resume-analyzer-platform)
+├── pnpm-lock.yaml                # Root lockfile
 ├── docker-compose.yml             # Container orchestration
-├── start.sh / start.bat           # Startup scripts
+├── dev-start.sh                   # Development startup script
 ├── README.md                      # This file
-├── STARTUP_GUIDE.md              # Quick start guide
+├── DEVELOPMENT.md                 # Hybrid development guide
+├── STARTUP_GUIDE.md              # Detailed startup guide
 ├── job-search-be/                # Backend application
-│   ├── main.py                   # FastAPI app
+│   ├── main.py                   # FastAPI app (v6.2.0)
 │   ├── requirements.txt          # Python dependencies
 │   ├── Dockerfile               # Backend container
+│   ├── .env_template            # Environment template
+│   ├── .env                     # Your API key (create this)
 │   └── venv/                    # Virtual environment
 └── job-search-fe/               # Frontend application
     ├── pages/                   # Nuxt pages
     ├── components/              # Vue components
     ├── package.json            # Frontend dependencies
     ├── nuxt.config.ts          # Nuxt configuration
-    ├── Dockerfile             # Frontend container
+    ├── tailwind.config.js      # Tailwind configuration
+    ├── components.json         # Shadcn component config
     └── node_modules/          # NPM packages
 ```
 
@@ -198,36 +221,58 @@ cp job-search-be/.env_template job-search-be/.env
 # Then edit job-search-be/.env with your actual API key
 ```
 
-**Frontend** (`.env` in `job-search-fe/`):
+**Frontend** (Automatic via scripts):
 ```env
 NUXT_PUBLIC_API_BASE_URL=http://localhost:8000
 ```
 
-### Scripts Available
+### Available Scripts
 
 ```bash
 # Root level (coordination)
-npm run dev              # Start both services
-npm run install:all      # Install all dependencies
+npm run dev              # Start hybrid development environment
+npm run start            # Alternative start command
+npm run stop             # Stop Docker services
+npm run logs             # View backend Docker logs
+npm run dev:backend      # Start only backend in Docker
+npm run dev:frontend     # Start only frontend locally
+npm run install:frontend # Install frontend dependencies
 npm run clean           # Clean build artifacts
-npm run docker:up       # Docker deployment
-npm run docker:down     # Stop Docker services
+
+# Development script options
+./dev-start.sh           # Hybrid mode (default)
+./dev-start.sh docker    # Both services in Docker
+./dev-start.sh backend   # Only backend
+./dev-start.sh frontend  # Only frontend
+./dev-start.sh stop      # Stop Docker containers
+./dev-start.sh logs      # Show backend logs
+./dev-start.sh restart   # Restart backend container
 
 # Frontend specific
 cd job-search-fe
-pnpm dev                # Development server
+pnpm dev:local          # Development with local API connection
 pnpm build              # Production build
 pnpm preview            # Preview build
 
 # Backend specific
 cd job-search-be
-uvicorn main:app --reload  # Development server
-python -m pytest          # Run tests (if available)
+uvicorn main:app --reload  # Development server (if running locally)
 ```
 
 ## 🛠 Troubleshooting
 
 ### Common Issues
+
+**Google API Key Issues:**
+```bash
+# Check if .env file exists and contains API key
+ls job-search-be/.env
+cat job-search-be/.env
+
+# If missing, copy template and edit:
+cp job-search-be/.env_template job-search-be/.env
+# Then edit with your actual API key
+```
 
 **Port Conflicts:**
 ```bash
@@ -248,31 +293,36 @@ cd job-search-be && rm -rf venv && python -m venv venv
 ```bash
 docker-compose down --remove-orphans
 docker system prune -f
+./dev-start.sh stop
 ```
 
 ### Logs and Debugging
 
-- **Local Development**: Check terminal output
+- **Hybrid Development**: Frontend logs in terminal, backend via `./dev-start.sh logs`
 - **Docker**: `docker-compose logs -f [service]`
-- **Individual Services**: Check service-specific logs
+- **Individual Services**: Check service-specific terminal output
 
 ## 🚀 Deployment
 
-### Production Checklist
-- [ ] Environment variables configured
-- [ ] Docker images built and tested
-- [ ] Backend API endpoints secured
-- [ ] Frontend build optimized
-- [ ] CORS settings configured
-- [ ] File upload limits set
+### Development Deployment Checklist
+- [ ] Environment variables configured (.env file with GOOGLE_API_KEY)
+- [ ] Docker service running
+- [ ] LibreOffice available in backend container for DOCX conversion
+- [ ] Frontend connecting to backend API successfully
 
-### Docker Production
+### Docker Deployment
 ```bash
-# Build production images
-docker-compose -f docker-compose.prod.yml up --build
+# Build and run backend
+docker-compose up --build
 
-# Scale services
-docker-compose up --scale frontend=2 --scale backend=2
+# Run backend in background
+docker-compose up -d --build
+
+# Start frontend separately
+cd job-search-fe && pnpm dev:local
+
+# View backend logs
+docker-compose logs -f
 ```
 
 ## 🤝 Contributing
@@ -280,8 +330,8 @@ docker-compose up --scale frontend=2 --scale backend=2
 1. Clone the repository
 2. Create a feature branch
 3. Make changes in appropriate service directory
-4. Test locally with `./start.sh local`
-5. Test with Docker using `./start.sh docker`
+4. Test locally with `./dev-start.sh`
+5. Test with Docker using `./dev-start.sh docker`
 6. Submit pull request
 
 ## 📄 License
@@ -290,8 +340,9 @@ MIT License - see LICENSE file for details.
 
 ## 📞 Support
 
-- Check [STARTUP_GUIDE.md](./STARTUP_GUIDE.md) for quick start
+- Check [DEVELOPMENT.md](./DEVELOPMENT.md) for hybrid development setup
+- Review [STARTUP_GUIDE.md](./STARTUP_GUIDE.md) for detailed startup instructions
+- Use `./dev-start.sh` without arguments for help
 - Review logs for error details
-- Use `./start.sh help` for script options
 
 ---

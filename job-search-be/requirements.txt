@@ -6,6 +6,3 @@ python-multipart>=0.0.6
 # For LLM interaction
 google-generativeai>=0.5.4
 python-dotenv>=1.0.1
-
-# For file conversion (DOCX to PDF)
-docx2pdf>=0.1.8

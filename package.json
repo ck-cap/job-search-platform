@@ -4,23 +4,20 @@
   "description": "AI-powered resume analyzer with FastAPI backend and Nuxt.js frontend",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:backend": "cd job-search-be && uvicorn main:app --reload --port 8000",
-    "dev:frontend": "cd job-search-fe && pnpm dev",
-    "start": "npm run dev",
-    "docker:up": "docker-compose up --build",
-    "docker:down": "docker-compose down",
-    "docker:logs": "docker-compose logs -f",
-    "install:all": "npm run install:backend && npm run install:frontend",
-    "install:backend": "cd job-search-be && pip install -r requirements.txt",
+    "dev": "./dev-start.sh",
+    "dev:hybrid": "./dev-start.sh",
+    "dev:backend": "docker-compose up -d backend",
+    "dev:frontend": "cd job-search-fe && pnpm dev:local",
+    "start": "./dev-start.sh",
+    "stop": "./dev-start.sh stop",
+    "logs": "./dev-start.sh logs",
+    "restart": "./dev-start.sh restart",
     "install:frontend": "cd job-search-fe && pnpm install",
     "clean": "npm run clean:backend && npm run clean:frontend",
     "clean:backend": "cd job-search-be && rm -rf __pycache__ .pytest_cache",
     "clean:frontend": "cd job-search-fe && pnpm run clean"
   },
-  "devDependencies": {
-    "concurrently": "^8.2.2"
-  },
+  "devDependencies": {},
   "keywords": [
     "resume",
     "analyzer",

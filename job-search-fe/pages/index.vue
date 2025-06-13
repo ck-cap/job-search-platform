@@ -1,33 +1,8 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-50 via-primary-50 to-indigo-100">
-    <!-- Header -->
-    <header class="backdrop-glass border-b border-gray-200/60 sticky top-0 z-50">
-      <div class="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-3">
-            <div class="w-12 h-12 bg-gradient-to-br from-primary-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-medium">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-              </svg>
-            </div>
-            <div>
-              <h1 class="text-xl sm:text-2xl font-bold text-gradient">
-                Smart Resume Analyzer
-              </h1>
-              <p class="text-xs sm:text-sm text-gray-600 hidden sm:block">AI-powered resume analysis with job matching</p>
-            </div>
-          </div>
-          <div class="hidden md:flex items-center space-x-2 text-sm text-gray-600">
-            <div class="flex items-center space-x-1">
-              <div class="w-2 h-2 bg-green-500 rounded-full animate-bounce-subtle"></div>
-              <span>Backend {{ backendStatus }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <main class="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-6xl">
+  <div class="min-h-screen bg-gray-50">
+    <AppNavigation />
+    
+    <main class="max-w-6xl mx-auto py-6 sm:px-6 lg:px-8">
       <!-- Progress Indicator -->
       <div class="mb-8 sm:mb-12 animate-fade-in">
         <!-- Horizontal Progress (lg and up) -->
@@ -216,11 +191,12 @@
               <p class="text-xs sm:text-sm text-gray-500">Review and edit your information as needed</p>
             </div>
             
-            <!-- Check if we have structured data -->
             <div v-if="hasStructuredData">
+              <!-- Debug info for structured display -->
               <StructuredResumeDisplay 
                 :resume-data="(parsedData?.parsed_data || parsedData) as any" 
                 v-model="editableData"
+                @update:modelValue="handleStructuredDataUpdate"
               />
             </div>
             
@@ -239,7 +215,7 @@
                       <button
                         v-if="!isEditing[String(section)]"
                         @click="toggleEdit(String(section))"
-                        class="edit-button p-1 text-gray-400 hover:text-primary-600 transition-colors focus-ring rounded"
+                        class="edit-button p-2 text-gray-500 hover:text-blue-600 transition-colors rounded-lg hover:bg-blue-50 border border-transparent hover:border-blue-200"
                         :title="`Edit ${formatSectionName(String(section))}`"
                       >
                         <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -249,7 +225,7 @@
                       <div v-else class="flex items-center space-x-1">
                         <button
                           @click="saveEdit(String(section))"
-                          class="p-1 text-green-600 hover:text-green-700 transition-colors focus-ring rounded"
+                          class="p-2 text-green-600 hover:text-green-700 transition-colors rounded-lg hover:bg-green-50 border border-green-200"
                           title="Save changes"
                         >
                           <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -258,7 +234,7 @@
                         </button>
                         <button
                           @click="cancelEdit(String(section))"
-                          class="p-1 text-red-600 hover:text-red-700 transition-colors focus-ring rounded"
+                          class="p-2 text-red-600 hover:text-red-700 transition-colors rounded-lg hover:bg-red-50 border border-red-200"
                           title="Cancel changes"
                         >
                           <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -274,17 +250,64 @@
                     <p class="text-xs sm:text-sm text-gray-700 line-clamp-3">{{ safeSubstring(getDisplayData(String(section)), 150) }}</p>
                   </div>
                   <div v-else>
-                    <textarea
-                      v-model="editableData[String(section)]"
-                      class="editable-textarea w-full p-2 sm:p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-xs sm:text-sm"
-                      rows="4"
-                      :placeholder="`Enter ${formatSectionName(String(section)).toLowerCase()}...`"
-                      @keydown.meta.enter="saveEdit(String(section))"
-                      @keydown.ctrl.enter="saveEdit(String(section))"
-                      @keydown.esc="cancelEdit(String(section))"
-                    ></textarea>
-                    <div class="mt-2 text-xs text-gray-500">
-                      Press <kbd>Cmd/Ctrl + Enter</kbd> to save, <kbd>Esc</kbd> to cancel
+                    <!-- Special handling for contact information -->
+                    <div v-if="section === 'contact_information' || section === 'contact_info'" class="space-y-3">
+                      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label class="block text-xs font-medium text-gray-700 mb-1">Name</label>
+                          <input 
+                            v-model="contactEditFields.name"
+                            type="text" 
+                            class="w-full p-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            placeholder="Enter your full name"
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-xs font-medium text-gray-700 mb-1">Email</label>
+                          <input 
+                            v-model="contactEditFields.email"
+                            type="email" 
+                            class="w-full p-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            placeholder="Enter your email address"
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-xs font-medium text-gray-700 mb-1">Phone</label>
+                          <input 
+                            v-model="contactEditFields.phone"
+                            type="tel" 
+                            class="w-full p-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            placeholder="Enter your phone number"
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-xs font-medium text-gray-700 mb-1">Location</label>
+                          <input 
+                            v-model="contactEditFields.location"
+                            type="text" 
+                            class="w-full p-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            placeholder="Enter your location"
+                          />
+                        </div>
+                      </div>
+                      <div class="mt-2 text-xs text-gray-500">
+                        Press <kbd>Cmd/Ctrl + Enter</kbd> to save, <kbd>Esc</kbd> to cancel
+                      </div>
+                    </div>
+                    <!-- Default textarea for other sections -->
+                    <div v-else>
+                      <textarea
+                        v-model="editableData[String(section)]"
+                        class="editable-textarea w-full p-2 sm:p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-xs sm:text-sm"
+                        rows="4"
+                        :placeholder="`Enter ${formatSectionName(String(section)).toLowerCase()}...`"
+                        @keydown.meta.enter="saveEdit(String(section))"
+                        @keydown.ctrl.enter="saveEdit(String(section))"
+                        @keydown.esc="cancelEdit(String(section))"
+                      ></textarea>
+                      <div class="mt-2 text-xs text-gray-500">
+                        Press <kbd>Cmd/Ctrl + Enter</kbd> to save, <kbd>Esc</kbd> to cancel
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -522,28 +545,13 @@
         </div>
       </div>
     </main>
-
-    <!-- Footer -->
-    <footer class="backdrop-glass border-t border-gray-200/60 mt-12 sm:mt-16">
-      <div class="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        <div class="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0 text-sm text-gray-600">
-          <div class="flex flex-col space-y-2 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4">
-            <span class="text-center sm:text-left">© 2025 Smart Resume Analyzer</span>
-            <span class="hidden sm:inline">•</span>
-            <span class="text-center sm:text-left">Powered by love, create by us</span>
-          </div>
-          <div class="flex items-center justify-center md:justify-end space-x-4">
-            <span>Thanks to Prof G</span>
-          </div>
-        </div>
-      </div>
-    </footer>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch, reactive } from 'vue';
 import StructuredResumeDisplay from '~/components/StructuredResumeDisplay.vue';
+import AppNavigation from '~/components/AppNavigation.vue';
 
 // SEO and Meta
 useHead({
@@ -615,6 +623,12 @@ const hasStructuredData = computed(() => {
 // Editing states for review section
 const isEditing = ref<Record<string, boolean>>({});
 const editableData = ref<Record<string, string>>({});
+const contactEditFields = reactive({
+  name: '',
+  email: '',
+  phone: '',
+  location: ''
+});
 
 // Progress steps configuration
 const progressSteps = [
@@ -1117,20 +1131,84 @@ function toggleEdit(section: string) {
   isEditing.value[section] = !isEditing.value[section];
   
   // If starting to edit, ensure the field has the current value
-  if (isEditing.value[section] && !editableData.value[section]) {
-    editableData.value[section] = parsedData.value?.[section] || '';
+  if (isEditing.value[section]) {
+    if (section === 'contact_information' || section === 'contact_info') {
+      // Initialize contact fields from structured data
+      const contactData = parsedData.value?.[section] || parsedData.value?.contact_info || {};
+      if (typeof contactData === 'object') {
+        contactEditFields.name = contactData.name || '';
+        contactEditFields.email = contactData.email || '';
+        contactEditFields.phone = contactData.phone || '';
+        contactEditFields.location = contactData.location || '';
+      } else if (typeof contactData === 'string') {
+        // Parse string format if it exists
+        const lines = contactData.split('\n');
+        contactEditFields.name = lines[0] || '';
+        contactEditFields.email = lines[1] || '';
+        contactEditFields.phone = lines[2] || '';
+        contactEditFields.location = lines[3] || '';
+      }
+    } else if (!editableData.value[section]) {
+      editableData.value[section] = parsedData.value?.[section] || '';
+    }
   }
 }
 
 function saveEdit(section: string) {
   isEditing.value[section] = false;
-  // The reactive data is automatically updated through v-model
+  
+  if (section === 'contact_information' || section === 'contact_info') {
+    // Update the parsed data with individual contact fields
+    if (parsedData.value) {
+      if (!parsedData.value[section]) {
+        parsedData.value[section] = {};
+      }
+      
+      // Handle both structured and string formats
+      if (typeof parsedData.value[section] === 'object') {
+        parsedData.value[section].name = contactEditFields.name;
+        parsedData.value[section].email = contactEditFields.email;
+        parsedData.value[section].phone = contactEditFields.phone;
+        parsedData.value[section].location = contactEditFields.location;
+      } else {
+        // Convert to string format for compatibility
+        parsedData.value[section] = `${contactEditFields.name}\n${contactEditFields.email}\n${contactEditFields.phone}\n${contactEditFields.location}`;
+      }
+      
+      // Also update the main contact_info if we're editing contact_information
+      if (section === 'contact_information' && parsedData.value.contact_info) {
+        parsedData.value.contact_info.name = contactEditFields.name;
+        parsedData.value.contact_info.email = contactEditFields.email;
+        parsedData.value.contact_info.phone = contactEditFields.phone;
+        parsedData.value.contact_info.location = contactEditFields.location;
+      }
+    }
+  }
+  // For other sections, the reactive data is automatically updated through v-model
 }
 
 function cancelEdit(section: string) {
   isEditing.value[section] = false;
-  // Restore original value
-  editableData.value[section] = parsedData.value?.[section] || '';
+  
+  if (section === 'contact_information' || section === 'contact_info') {
+    // Reset contact fields to original values
+    const contactData = parsedData.value?.[section] || parsedData.value?.contact_info || {};
+    if (typeof contactData === 'object') {
+      contactEditFields.name = contactData.name || '';
+      contactEditFields.email = contactData.email || '';
+      contactEditFields.phone = contactData.phone || '';
+      contactEditFields.location = contactData.location || '';
+    } else if (typeof contactData === 'string') {
+      const lines = contactData.split('\n');
+      contactEditFields.name = lines[0] || '';
+      contactEditFields.email = lines[1] || '';
+      contactEditFields.phone = lines[2] || '';
+      contactEditFields.location = lines[3] || '';
+    }
+  } else {
+    // Restore original value for other sections
+    editableData.value[section] = parsedData.value?.[section] || '';
+  }
 }
 
 function getDisplayData(section: string): string {
@@ -1477,6 +1555,23 @@ function extractExperienceYears(experienceData: string | any[] | object): number
 }
 
 // ... existing code ...
+
+// Handle updates from StructuredResumeDisplay component
+function handleStructuredDataUpdate(updatedData: Record<string, any>) {
+  console.log('📝 Handling structured data update:', updatedData);
+  
+  if (parsedData.value) {
+    // Update the parsedData with the new values
+    Object.keys(updatedData).forEach(key => {
+      if (parsedData.value) {
+        parsedData.value[key] = updatedData[key];
+      }
+    });
+    
+    // Also update editableData for consistency
+    editableData.value = { ...editableData.value, ...updatedData };
+  }
+}
 </script>
 
 <style scoped>
