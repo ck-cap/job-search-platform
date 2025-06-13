@@ -1,0 +1,91 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Package manager lock files (keep only one)
+package-lock.json
+yarn.lock
+# Keep pnpm-lock.yaml if using pnpm
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Temporary folders
+tmp/
+temp/
+
+# Build outputs (general)
+dist/
+build/
+
+# Frontend specific (job-search-fe)
+job-search-fe/.nuxt/
+job-search-fe/.output/
+job-search-fe/dist/
+
+# Backend specific (job-search-be)
+job-search-be/__pycache__/
+job-search-be/*.pyc
+job-search-be/*.pyo
+job-search-be/*.pyd
+job-search-be/.Python
+job-search-be/venv/
+job-search-be/.venv/
+job-search-be/env/
+job-search-be/.env/
+job-search-be/pip-log.txt
+job-search-be/pip-delete-this-directory.txt
+job-search-be/.pytest_cache/
+
+# Editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw? 
