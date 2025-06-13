@@ -40,8 +40,22 @@ A modern AI-powered job search platform with resume analysis capabilities. Built
 - **Python** v3.8+ and **pip**
 - **Docker** & **Docker Compose** (optional)
 - **Git** for version control
+- **Google API Key** for AI resume analysis (required)
 
 ## 🚀 Quick Start
+
+### ⚠️ Important: Setup Google API Key First
+
+Before starting the application, you must configure your Google API key:
+
+```bash
+# 1. Copy the environment template
+cp job-search-be/.env_template job-search-be/.env
+
+# 2. Edit the .env file and add your Google API key
+# Replace 'your_google_api_key_here' with your actual API key from:
+# https://aistudio.google.com/app/apikey
+```
 
 ### Automated Startup (Recommended)
 
@@ -157,16 +171,36 @@ job-search-platform/                # Monorepo root
 
 ### Environment Variables
 
-**Frontend** (`.env` in `job-search-fe/`):
-```env
-NUXT_PUBLIC_API_BASE_URL=http://localhost:8000
-```
+#### Required Setup: Google API Key
+
+**⚠️ IMPORTANT**: Before running the application, you must create a `.env` file in the backend directory with your Google API key.
 
 **Backend** (`.env` in `job-search-be/`):
 ```env
+# Required: Google Generative AI API Key
+GOOGLE_API_KEY=your_actual_api_key_here
+
+# Optional server configuration
 PYTHONPATH=.
 UVICORN_HOST=0.0.0.0
 UVICORN_PORT=8000
+```
+
+**How to get your Google API Key:**
+1. Visit https://aistudio.google.com/app/apikey
+2. Create a new API key
+3. Copy the key and replace `your_actual_api_key_here` in your `.env` file
+
+**Quick Setup:**
+```bash
+# Copy the template and edit it
+cp job-search-be/.env_template job-search-be/.env
+# Then edit job-search-be/.env with your actual API key
+```
+
+**Frontend** (`.env` in `job-search-fe/`):
+```env
+NUXT_PUBLIC_API_BASE_URL=http://localhost:8000
 ```
 
 ### Scripts Available
@@ -261,5 +295,3 @@ MIT License - see LICENSE file for details.
 - Use `./start.sh help` for script options
 
 ---
-
-**Built with ❤️ for better job searching** 

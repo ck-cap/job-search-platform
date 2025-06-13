@@ -528,12 +528,12 @@
       <div class="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <div class="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0 text-sm text-gray-600">
           <div class="flex flex-col space-y-2 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4">
-            <span class="text-center sm:text-left">© 2024 Smart Resume Analyzer</span>
+            <span class="text-center sm:text-left">© 2025 Smart Resume Analyzer</span>
             <span class="hidden sm:inline">•</span>
-            <span class="text-center sm:text-left">Powered by AI</span>
+            <span class="text-center sm:text-left">Powered by love, create by us</span>
           </div>
           <div class="flex items-center justify-center md:justify-end space-x-4">
-            <span>Made with ❤️ for better careers</span>
+            <span>Thanks to Prof G</span>
           </div>
         </div>
       </div>

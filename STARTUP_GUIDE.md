@@ -15,8 +15,38 @@ Ensure you have these installed:
 - **Python 3.8+** and **pip** (backend)
 - **Docker & Docker Compose** (containerized deployment)
 - **Git** (version control)
+- **Google API Key** for AI resume analysis (required)
 
 ## 🚀 Startup Methods
+
+### ⚠️ IMPORTANT: Setup Google API Key First
+
+**Before starting the application**, you must configure your Google API key for AI resume analysis:
+
+```bash
+# Step 1: Copy the environment template
+cp job-search-be/.env_template job-search-be/.env
+
+# Step 2: Get your Google API key
+# Visit: https://aistudio.google.com/app/apikey
+# Create a new API key and copy it
+
+# Step 3: Edit the .env file
+# Open job-search-be/.env and replace 'your_google_api_key_here' with your actual API key
+```
+
+**Quick Setup Example:**
+```bash
+# Edit the .env file (use your preferred editor)
+nano job-search-be/.env
+# or
+code job-search-be/.env
+# or
+vim job-search-be/.env
+
+# Make sure it looks like this:
+# GOOGLE_API_KEY=your_actual_api_key_from_google
+```
 
 ### 🌟 Method 1: Automated Scripts (Recommended)
 
@@ -85,6 +115,11 @@ docker-compose logs -f
 **Terminal 1 - Backend:**
 ```bash
 cd job-search-be
+
+# IMPORTANT: Setup .env file first (if not done already)
+cp .env_template .env
+# Edit .env file with your Google API key
+
 python -m venv venv
 
 # Activate virtual environment
@@ -146,13 +181,25 @@ docker-compose up --build
 
 ### Common Issues & Solutions
 
-**1. Port Already in Use**
+**1. Google API Key Issues**
+```bash
+# Error: "GOOGLE_API_KEY not found"
+# Solution: Ensure .env file exists and contains valid API key
+ls job-search-be/.env              # Check if file exists
+cat job-search-be/.env             # Verify API key is set
+
+# If missing, copy template and edit:
+cp job-search-be/.env_template job-search-be/.env
+# Then edit with your actual API key from: https://aistudio.google.com/app/apikey
+```
+
+**2. Port Already in Use**
 ```bash
 # Scripts auto-kill processes, but manual option:
 lsof -ti:3000,8000 | xargs kill -9
 ```
 
-**2. Python Virtual Environment Issues**
+**3. Python Virtual Environment Issues**
 ```bash
 cd job-search-be
 rm -rf venv                    # Delete existing
@@ -160,14 +207,14 @@ python -m venv venv           # Recreate
 # Re-run startup script
 ```
 
-**3. Node Dependencies Issues**
+**4. Node Dependencies Issues**
 ```bash
 cd job-search-fe
 rm -rf node_modules           # Delete modules
 pnpm install                  # Reinstall
 ```
 
-**4. Docker Problems**
+**5. Docker Problems**
 ```bash
 # Clean up Docker
 docker-compose down --remove-orphans
@@ -177,7 +224,7 @@ docker system prune -f
 docker-compose up --build --force-recreate
 ```
 
-**5. Git Issues (Monorepo)**
+**6. Git Issues (Monorepo)**
 ```bash
 # If submodule errors persist
 git submodule deinit --all
@@ -221,6 +268,8 @@ job-search-platform/          # Monorepo root
 ├── job-search-be/         # Backend Service
 │   ├── main.py           # FastAPI application
 │   ├── requirements.txt  # Python dependencies
+│   ├── .env_template     # Environment variables template
+│   ├── .env             # Environment variables (created from template)
 │   ├── Dockerfile       # Backend container
 │   ├── venv/           # Virtual environment (created)
 │   └── README.md       # Backend-specific docs
