@@ -34,14 +34,6 @@ one_time_setup() {
         echo "   Continuing without model extraction..."
     fi
     
-    # Check environment files
-    if [ ! -f ".env" ]; then
-        echo "⚠️  Creating .env file..."
-        cp services/backend-api/.env_template services/backend-api/.env
-        echo "   Please edit services/backend-api/.env with your Google API key then rerun the script"
-        exit 1
-    fi
-    
     echo ""
 }
 

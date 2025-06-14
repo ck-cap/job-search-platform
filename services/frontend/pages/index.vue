@@ -360,9 +360,9 @@
           <div class="card-header">
             <div class="flex items-center justify-between">
               <div class="flex items-start sm:items-center space-x-3">
-                <div class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <svg class="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                <div class="w-8 h-8 sm:w-10 sm:h-10 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5 sm:w-6 sm:h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                   </svg>
                 </div>
                 <div class="flex-1 min-w-0">
@@ -384,24 +384,32 @@
           
           <Transition name="slide-down" mode="out-in">
             <div v-show="isSummaryRecsExpanded" class="card-body">
-              <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+              <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
                 <div class="flex items-start space-x-3">
-                  <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                  <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                   </svg>
                   <div>
-                    <p class="text-sm font-medium text-blue-800 mb-1">About these recommendations</p>
-                    <p class="text-xs text-blue-700">These recommendations are based on your original uploaded resume, not the edited data in the review stage. They help identify areas for improvement in your resume content and structure.</p>
+                    <p class="text-sm font-medium text-amber-800 mb-1">About these recommendations</p>
+                    <p class="text-xs text-amber-700">These recommendations are based on your original uploaded resume, not the edited data in the review stage. They help identify areas for improvement in your resume content and structure.</p>
                   </div>
                 </div>
               </div>
               
-              <div class="space-y-4">
-                <div v-for="(recommendation, index) in originalParsedData.summary_recommendations" :key="index" class="flex items-start space-x-3">
-                  <div class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5 flex-shrink-0">
-                    {{ index + 1 }}
+              <div class="bg-white border border-gray-200 rounded-lg p-6">
+                <div class="flex items-center space-x-2 mb-4">
+                  <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                  </svg>
+                  <h3 class="text-lg font-semibold text-gray-900">Improvement Suggestions</h3>
+                </div>
+                <div class="space-y-3">
+                  <div v-for="(recommendation, index) in originalParsedData.summary_recommendations" :key="index" class="flex items-start space-x-3">
+                    <div class="w-6 h-6 bg-amber-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5 flex-shrink-0">
+                      {{ index + 1 }}
+                    </div>
+                    <p class="text-sm text-gray-700 leading-relaxed flex-1">{{ recommendation }}</p>
                   </div>
-                  <p class="text-sm text-gray-700 leading-relaxed">{{ recommendation }}</p>
                 </div>
               </div>
             </div>
@@ -441,7 +449,10 @@
                 <div v-for="job in jobMatches" :key="job.job_id" class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                   <div class="flex justify-between items-start mb-3">
                     <div class="flex-1">
-                      <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ job.job_title }}</h3>
+                      <div class="flex items-center space-x-2 mb-1">
+                        <h3 class="text-lg font-semibold text-gray-900">{{ job.job_title }}</h3>
+                        <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-mono">ID: {{ job.job_id }}</span>
+                      </div>
                       <p class="text-sm text-gray-600">{{ job.company }} • {{ job.location }}</p>
                     </div>
                     <div class="flex items-center space-x-2 ml-4">
@@ -465,9 +476,18 @@
                     </span>
                   </div>
                   
-                  <div class="flex justify-between items-center text-xs text-gray-500">
-                    <span>{{ job.subcategory }} • {{ job.role }}</span>
-                    <span>Listed: {{ new Date(job.listingDate).toLocaleDateString() }}</span>
+                  <div class="flex justify-between items-center mb-3">
+                    <div class="text-xs text-gray-500">
+                      <span>{{ job.subcategory }} • {{ job.role }}</span>
+                      <br>
+                      <span>Listed: {{ new Date(job.listingDate).toLocaleDateString() }}</span>
+                    </div>
+                    <NuxtLink 
+                      :to="`/company/${job.company.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}`"
+                      class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 transition-colors"
+                    >
+                      <span>View Company</span>
+                    </NuxtLink>
                   </div>
                 </div>
               </div>
@@ -582,6 +602,17 @@ const isAnalysisExpanded = ref(true);
 const isCompanyRecsExpanded = ref(true);
 const isSummaryRecsExpanded = ref(true);
 const isJobRecsExpanded = ref(true);
+
+// Session storage keys
+const SESSION_KEYS = {
+  currentView: 'resume_analyzer_current_view',
+  parsedData: 'resume_analyzer_parsed_data',
+  analysisResult: 'resume_analyzer_analysis_result',
+  originalParsedData: 'resume_analyzer_original_parsed_data',
+  jobMatches: 'resume_analyzer_job_matches',
+  editableData: 'resume_analyzer_editable_data',
+  fileName: 'resume_analyzer_file_name'
+};
 
 // Safe computed property for preview sections
 const safePreviewSections = computed(() => {
@@ -723,6 +754,72 @@ const companyRecommendations = computed(() => {
     .slice(0, 6);
 });
 
+// Session storage functions
+function saveToSession() {
+  if (process.client) {
+    try {
+      sessionStorage.setItem(SESSION_KEYS.currentView, currentView.value);
+      if (parsedData.value) {
+        sessionStorage.setItem(SESSION_KEYS.parsedData, JSON.stringify(parsedData.value));
+      }
+      if (analysisResult.value) {
+        sessionStorage.setItem(SESSION_KEYS.analysisResult, JSON.stringify(analysisResult.value));
+      }
+      if (originalParsedData.value) {
+        sessionStorage.setItem(SESSION_KEYS.originalParsedData, JSON.stringify(originalParsedData.value));
+      }
+      if (jobMatches.value?.length) {
+        sessionStorage.setItem(SESSION_KEYS.jobMatches, JSON.stringify(jobMatches.value));
+      }
+      if (editableData.value) {
+        sessionStorage.setItem(SESSION_KEYS.editableData, JSON.stringify(editableData.value));
+      }
+      if (selectedFile.value) {
+        sessionStorage.setItem(SESSION_KEYS.fileName, selectedFile.value.name);
+      }
+    } catch (error) {
+      console.warn('Failed to save to session storage:', error);
+    }
+  }
+}
+
+function loadFromSession() {
+  if (process.client) {
+    try {
+      const savedView = sessionStorage.getItem(SESSION_KEYS.currentView);
+      const savedParsedData = sessionStorage.getItem(SESSION_KEYS.parsedData);
+      const savedAnalysisResult = sessionStorage.getItem(SESSION_KEYS.analysisResult);
+      const savedOriginalParsedData = sessionStorage.getItem(SESSION_KEYS.originalParsedData);
+      const savedJobMatches = sessionStorage.getItem(SESSION_KEYS.jobMatches);
+      const savedEditableData = sessionStorage.getItem(SESSION_KEYS.editableData);
+      const savedFileName = sessionStorage.getItem(SESSION_KEYS.fileName);
+
+      if (savedView) currentView.value = savedView as 'upload' | 'confirmation' | 'results';
+      if (savedParsedData) parsedData.value = JSON.parse(savedParsedData);
+      if (savedAnalysisResult) analysisResult.value = JSON.parse(savedAnalysisResult);
+      if (savedOriginalParsedData) originalParsedData.value = JSON.parse(savedOriginalParsedData);
+      if (savedJobMatches) jobMatches.value = JSON.parse(savedJobMatches);
+      if (savedEditableData) editableData.value = JSON.parse(savedEditableData);
+      
+      // Create a mock file object if we have a saved filename
+      if (savedFileName && !selectedFile.value) {
+        // We can't recreate the actual file, but we can show the name
+        // This is mainly for display purposes
+      }
+    } catch (error) {
+      console.warn('Failed to load from session storage:', error);
+    }
+  }
+}
+
+function clearSession() {
+  if (process.client) {
+    Object.values(SESSION_KEYS).forEach(key => {
+      sessionStorage.removeItem(key);
+    });
+  }
+}
+
 // Methods
 function handleFileUpload(event: Event) {
   const target = event.target as HTMLInputElement;
@@ -759,6 +856,9 @@ function clearFile() {
   if (fileInput.value) {
     fileInput.value.value = '';
   }
+  
+  // Clear session storage
+  clearSession();
 }
 
 async function processResume() {
@@ -1276,6 +1376,10 @@ const scrollToTop = () => {
 
 onMounted(() => {
   console.log('🎬 Component mounted');
+  
+  // Load saved state from session
+  loadFromSession();
+  
   console.log('📊 Initial state:', {
     currentView: currentView.value,
     analysisResult: analysisResult.value,
@@ -1283,6 +1387,14 @@ onMounted(() => {
   });
   checkBackendStatus();
 });
+
+// Watchers to save state automatically
+watch([currentView, parsedData, analysisResult, originalParsedData, jobMatches, editableData], 
+  () => {
+    saveToSession();
+  },
+  { deep: true }
+);
 
 // Add watcher for currentView
 watch(currentView, (newView, oldView) => {

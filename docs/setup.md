@@ -1,6 +1,7 @@
 # Setup Guide
 
 ## Prerequisites
+Refer **[Prerequisites](docs/prerequisites.md)** to set up the development environment.
 
 - Docker Desktop
 - pnpm (for frontend development)

@@ -85,6 +85,9 @@ export default {
     "shadow-medium",
     "shadow-strong",
     "shadow-glow",
+    // Color utilities
+    "bg-amber-50", "bg-amber-100", "bg-amber-600", "text-amber-600", "text-amber-700", "text-amber-800",
+    "border-amber-200", "fill-current",
     // Specific responsive utilities that we actually use
     "sm:w-10", "sm:w-12", "sm:h-10", "sm:h-12",
     "sm:text-sm", "sm:text-base", "sm:text-lg", "sm:text-xl", "sm:text-2xl",

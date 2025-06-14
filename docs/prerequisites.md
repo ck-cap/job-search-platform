@@ -97,6 +97,40 @@ npm install -g pnpm
 pnpm --version
 ```
 
+#### Additional Setup for Windows Users
+**Important for Windows users:** You may need to install `cross-env` to run frontend development scripts seamlessly. This package ensures environment variables work correctly across different operating systems.
+
+```bash
+# Install cross-env globally using pnpm
+pnpm add -g cross-env
+
+# Verify installation
+cross-env --version
+```
+
+**Note:** If you encounter issues with environment variable scripts on Windows (like `NUXT_PUBLIC_API_BASE_URL=... nuxt dev`), make sure `cross-env` is installed and properly configured.
+
+**Script Modification for Windows:**
+After installing `cross-env`, you may need to update the pnpm scripts in `services/frontend/package.json` to use `cross-env`. Look for scripts that set environment variables and modify them as follows:
+
+```json
+// Before (won't work on Windows):
+"dev": "NUXT_PUBLIC_API_BASE_URL=http://localhost:8000 nuxt dev",
+"dev:local": "NUXT_PUBLIC_API_BASE_URL=http://localhost:8000 nuxt dev"
+
+// After (works on all platforms):
+"dev": "cross-env NUXT_PUBLIC_API_BASE_URL=http://localhost:8000 nuxt dev",
+"dev:local": "cross-env NUXT_PUBLIC_API_BASE_URL=http://localhost:8000 nuxt dev"
+```
+
+**Steps to update scripts:**
+1. Navigate to `services/frontend/package.json`
+2. Find scripts that start with environment variables (like `NUXT_PUBLIC_API_BASE_URL=...`)
+3. Add `cross-env ` at the beginning of those script commands
+4. Save the file
+
+This ensures the frontend development commands work seamlessly on Windows, Mac, and Linux.
+
 ### Method 2: Using Node Version Manager (Advanced)
 
 This method lets you install multiple Node.js versions.
@@ -207,7 +241,32 @@ The platform uses Google's AI for resume analysis.
 
 ---
 
-## 5. Verify Everything is Installed
+## 5. Environment Variables Configuration
+
+After completing the setup, you'll need to configure environment variables in your `.env` file. Most variables have default values, but here are some important notes:
+
+### MODEL_PATH and DATASET_PATH
+These variables specify the paths to the machine learning model and dataset files used for job matching:
+
+```bash
+MODEL_PATH=/app/model/fine_tuned_mpnet_with_eval
+DATASET_PATH=/app/dataset/mpnet_finetune_dataset_test.csv
+```
+
+**Important Notes:**
+- ⚠️ **Only modify these paths if you need to use different model or dataset files**
+- The default paths work with the provided Docker setup and should not be changed for standard usage
+- These paths are mapped to Docker volumes, so changing them requires corresponding changes in the Docker configuration
+- If you're using custom models or datasets, ensure the files exist at the specified paths before starting the services
+
+### Additional Environment Variable Considerations
+- **GOOGLE_API_KEY**: This is required and must be set with your actual Google AI API key
+- **NUXT_PUBLIC_API_BASE_URL**: Automatically set by development scripts, typically points to `http://localhost:8000`
+- Most other environment variables have sensible defaults and don't require modification for standard development
+
+---
+
+## 6. Verify Everything is Installed
 
 Open your terminal/command prompt and run these commands:
 

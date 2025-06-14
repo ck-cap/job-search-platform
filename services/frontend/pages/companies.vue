@@ -18,6 +18,28 @@
             </span>
           </div>
         </div>
+
+        <!-- Back to Results Banner (only shown if user has session data) -->
+        <div v-if="hasResumeAnalysis" class="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+          <div class="flex items-start space-x-3">
+            <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div class="flex-1">
+              <p class="text-sm font-medium text-blue-800 mb-1">Resume Analysis Available</p>
+              <p class="text-xs text-blue-700 mb-3">You can return to your resume analysis results without re-uploading your resume.</p>
+              <NuxtLink 
+                to="/" 
+                class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm hover:shadow-md"
+              >
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Back to Resume Analysis
+              </NuxtLink>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Search and Filters -->
@@ -153,16 +175,12 @@
 
             <!-- Company Actions -->
             <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
-              <div class="flex space-x-2">
-                <button class="flex-1 bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
-                  View Details
-                </button>
-                <button class="px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-50 transition-colors">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                  </svg>
-                </button>
-              </div>
+              <NuxtLink 
+                :to="`/company/${company.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}`"
+                class="block w-full bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors text-center"
+              >
+                View Details
+              </NuxtLink>
             </div>
           </div>
         </div>
@@ -300,6 +318,16 @@ const filteredCompanies = computed(() => {
     
     return matchesSearch && matchesIndustry && matchesSize
   }).sort((a, b) => b.match - a.match) // Sort by match percentage
+})
+
+// Check if user has resume analysis data in session
+const hasResumeAnalysis = computed(() => {
+  if (process.client) {
+    const hasAnalysisData = sessionStorage.getItem('resume_analyzer_current_view') === 'results' &&
+                           sessionStorage.getItem('resume_analyzer_parsed_data');
+    return hasAnalysisData;
+  }
+  return false;
 })
 </script>
 

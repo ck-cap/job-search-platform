@@ -10,6 +10,22 @@ AI-powered job search platform with resume analysis and intelligent job matching
 - **Modern UI** - Responsive Nuxt.js frontend with Tailwind CSS
 - **Microservices Architecture** - Scalable Docker-based deployment
 
+## 📋 Prerequisites
+
+Refer **[Prerequisites](docs/prerequisites.md)** to set up the development environment.
+- Docker Desktop
+- pnpm (for frontend development)
+- Google API Key ([Get one here](https://makersuite.google.com/app/apikey))
+
+## 📖 Documentation
+
+- **[Prerequisites](docs/prerequisites.md)** - Install Docker, Node.js, pnpm and other dependencies
+- **[Setup Guide](docs/setup.md)** - Detailed installation and configuration
+- **[API Reference](docs/api.md)** - Complete API documentation
+- **[Architecture](docs/architecture.md)** - System design and components
+- **[Development](docs/development.md)** - Development workflow and debugging
+
+
 ## 🏃‍♂️ Quick Start
 
 1. **Clone and setup**:
@@ -41,27 +57,12 @@ Frontend (Nuxt.js) ←→ Backend API (FastAPI) ←→ Model Service (ML)
      ↓                      ↓                       ↓
 User Interface         Google Gemini AI        Job Matching Models
 ```
-
-## 📖 Documentation
-
-- **[Prerequisites](docs/prerequisites.md)** - Install Docker, Node.js, pnpm and other dependencies
-- **[Setup Guide](docs/setup.md)** - Detailed installation and configuration
-- **[API Reference](docs/api.md)** - Complete API documentation
-- **[Architecture](docs/architecture.md)** - System design and components
-- **[Development](docs/development.md)** - Development workflow and debugging
-
 ## 🛠️ Tech Stack
 
 - **Frontend**: Nuxt.js, Vue.js, Tailwind CSS
 - **Backend**: FastAPI, Python
 - **AI/ML**: Google Gemini, PyTorch, Sentence Transformers
 - **Infrastructure**: Docker, Docker Compose
-
-## 📋 Prerequisites
-
-- Docker Desktop
-- pnpm (for frontend development)
-- Google API Key ([Get one here](https://makersuite.google.com/app/apikey))
 
 ## 🚦 Commands
 
