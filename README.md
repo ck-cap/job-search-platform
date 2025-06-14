@@ -44,6 +44,7 @@ User Interface         Google Gemini AI        Job Matching Models
 
 ## 📖 Documentation
 
+- **[Prerequisites](docs/prerequisites.md)** - Install Docker, Node.js, pnpm and other dependencies
 - **[Setup Guide](docs/setup.md)** - Detailed installation and configuration
 - **[API Reference](docs/api.md)** - Complete API documentation
 - **[Architecture](docs/architecture.md)** - System design and components
