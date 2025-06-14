@@ -63,24 +63,24 @@ temp/
 dist/
 build/
 
-# Frontend specific (job-search-fe)
-job-search-fe/.nuxt/
-job-search-fe/.output/
-job-search-fe/dist/
+# Frontend specific (services/frontent)
+services/frontent/.nuxt/
+services/frontent/.output/
+services/frontent/dist/
 
-# Backend specific (job-search-be)
-job-search-be/__pycache__/
-job-search-be/*.pyc
-job-search-be/*.pyo
-job-search-be/*.pyd
-job-search-be/.Python
-job-search-be/venv/
-job-search-be/.venv/
-job-search-be/env/
-job-search-be/.env/
-job-search-be/pip-log.txt
-job-search-be/pip-delete-this-directory.txt
-job-search-be/.pytest_cache/
+# Backend specific (services/backend-api)
+services/backend-api/__pycache__/
+services/backend-api/*.pyc
+services/backend-api/*.pyo
+services/backend-api/*.pyd
+services/backend-api/.Python
+services/backend-api/venv/
+services/backend-api/.venv/
+services/backend-api/env/
+services/backend-api/.env/
+services/backend-api/pip-log.txt
+services/backend-api/pip-delete-this-directory.txt
+services/backend-api/.pytest_cache/
 
 # Editor directories and files
 .idea
@@ -89,3 +89,6 @@ job-search-be/.pytest_cache/
 *.njsproj
 *.sln
 *.sw? 
+
+# Ignore the model folder (will unzip after dev-start.sh run)
+services/model-service/model

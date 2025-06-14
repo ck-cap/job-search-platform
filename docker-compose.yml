@@ -1,19 +1,45 @@
 services:
-  backend:
-    build: ./job-search-be
+  model-service:
+    build:
+      context: ./services/model-service
+      dockerfile: Dockerfile
+    container_name: job-search-model-service-dev
+    ports:
+      - "8001:8001"
+    environment:
+      - MODEL_PATH=${MODEL_PATH}
+      - DATASET_PATH=${DATASET_PATH}
+    volumes:
+      - ./services/model-service/model:/app/model
+      - ./services/model-service/dataset:/app/dataset
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2'
+        reservations:
+          memory: 2G
+    restart: unless-stopped
+    networks:
+      - job-search-network
+
+  backend-api:
+    build:
+      context: ./services/backend-api
+      dockerfile: Dockerfile
+    container_name: job-search-backend-api-dev
     ports:
       - "8000:8000"
     environment:
-      - PYTHONUNBUFFERED=1
-      - PYTHONPATH=/app
-    env_file:
-      - ./job-search-be/.env  # Contains GOOGLE_API_KEY
+      - MODEL_SERVICE_URL=http://model-service:8001
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
     volumes:
-      - ./job-search-be:/app
-      - be_cache:/app/__pycache__     # Named volume for Python cache
-      - be_venv:/app/venv            # Named volume for virtual environment
-    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+      # Mount source code for hot reloading
+      - ./services/backend-api/main.py:/app/main.py
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    networks:
+      - job-search-network
 
-volumes:
-  be_cache:
-  be_venv: 
+networks:
+  job-search-network:
+    driver: bridge 

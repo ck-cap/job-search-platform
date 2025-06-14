@@ -1,0 +1,12 @@
+# Backend Service Requirements
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+python-multipart>=0.0.6
+python-dotenv>=1.0.1
+pydantic>=2.0.0
+
+# For LLM interaction
+google-generativeai>=0.5.4
+
+# HTTP client for calling model service
+httpx>=0.25.0 
