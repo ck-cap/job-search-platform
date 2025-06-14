@@ -1045,43 +1045,52 @@ function downloadReport() {
             line-height: 1.6; 
             color: #1f2937; 
             background: #f9fafb;
-            padding: 2rem;
+            padding: 1rem;
         }
-        .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .header { background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); color: white; padding: 2rem; text-align: center; }
-        .header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
-        .header p { opacity: 0.9; font-size: 1.1rem; }
-        .content { padding: 2rem; }
-        .section { margin-bottom: 2rem; }
-        .section-title { font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e5e7eb; }
-        .score-section { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid #bfdbfe; }
-        .score-display { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-        .score-number { font-size: 3rem; font-weight: 700; color: ${getScoreColor(analysisResult.value.overall_completeness_score).replace('text-', '')}; }
-        .score-label { font-size: 1rem; font-weight: 600; padding: 0.5rem 1rem; border-radius: 9999px; ${getScoreBadgeStyles(analysisResult.value.overall_completeness_score)} }
-        .progress-bar { width: 100%; height: 12px; background: #e5e7eb; border-radius: 6px; overflow: hidden; }
-        .progress-fill { height: 100%; background: ${getScoreBarColor(analysisResult.value.overall_completeness_score).replace('bg-', '')}; width: ${analysisResult.value.overall_completeness_score}%; transition: width 0.5s ease; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-        .card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 1.5rem; }
-        .card.orange { background: #fff7ed; border-color: #fed7aa; }
-        .card.blue { background: #eff6ff; border-color: #bfdbfe; }
-        .card.green { background: #f0fdf4; border-color: #bbf7d0; }
-        .card-title { font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
-        .icon { width: 1.25rem; height: 1.25rem; }
-        .missing-item { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
-        .bullet { width: 8px; height: 8px; border-radius: 50%; }
-        .bullet.orange { background: #f97316; }
-        .suggestion-item { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1rem; }
-        .suggestion-number { width: 1.5rem; height: 1.5rem; background: #16a34a; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 0.125rem; }
-        .company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
-        .company-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 1.5rem; }
-        .company-header { display: flex; align-items: start; gap: 1rem; margin-bottom: 1rem; }
-        .company-logo { width: 3rem; height: 3rem; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.25rem; }
-        .company-info h3 { font-weight: 600; margin-bottom: 0.25rem; }
-        .company-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
-        .tag { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; }
+        .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .header { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; padding: 3rem 2rem; text-align: center; }
+        .header h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .header p { opacity: 0.9; font-size: 1.2rem; margin-bottom: 1rem; }
+        .meta { opacity: 0.8; font-size: 1rem; }
+        .content { padding: 2.5rem; }
+        .section { margin-bottom: 3rem; }
+        .section-title { font-size: 1.75rem; font-weight: 700; color: #1f2937; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
+        .divider { height: 3px; background: linear-gradient(to right, #6366f1, #8b5cf6); border-radius: 2px; margin: 2rem 0; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; }
+        .card { border: 1px solid #e5e7eb; border-radius: 16px; padding: 2rem; background: white; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+        .card.highlight { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-color: #0284c7; }
+        .card.success { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-color: #16a34a; }
+        .card.warning { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border-color: #d97706; }
+        .score-display { text-align: center; padding: 2rem; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 12px; margin-bottom: 2rem; }
+        .score-number { font-size: 4rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem; }
+        .score-label { font-size: 1.1rem; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 50px; background: #6366f1; color: white; display: inline-block; }
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; text-align: center; }
+        .stat-number { font-size: 2rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem; }
+        .stat-label { color: #64748b; font-weight: 500; }
+        .recommendation-list { display: flex; flex-direction: column; gap: 1.5rem; }
+        .recommendation-item { display: flex; gap: 1rem; padding: 1.5rem; background: #f8fafc; border-radius: 12px; border-left: 4px solid #10b981; }
+        .rec-number { width: 2rem; height: 2rem; background: #10b981; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+        .job-card { border: 1px solid #e5e7eb; border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; background: white; }
+        .job-header { display: flex; justify-content: between; align-items: start; margin-bottom: 1.5rem; }
+        .job-title { font-size: 1.25rem; font-weight: 700; color: #1f2937; margin-bottom: 0.5rem; }
+        .job-company { color: #6b7280; font-weight: 500; }
+        .job-match { background: #dcfce7; color: #166534; padding: 0.5rem 1rem; border-radius: 50px; font-weight: 600; }
+        .job-tags { display: flex; gap: 0.75rem; flex-wrap: wrap; margin: 1rem 0; }
+        .tag { padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.875rem; font-weight: 500; }
         .tag.blue { background: #dbeafe; color: #1e40af; }
         .tag.green { background: #dcfce7; color: #166534; }
-        .footer { text-align: center; color: #6b7280; font-size: 0.875rem; padding: 1rem; border-top: 1px solid #e5e7eb; }
+        .tag.purple { background: #e9d5ff; color: #7c3aed; }
+        .contact-info { background: #f8fafc; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0; }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { font-weight: 600; color: #374151; }
+        .info-value { color: #6b7280; }
+        .key-highlights { background: linear-gradient(135deg, #fef3c7 0%, #fbbf24 20%, #f59e0b 100%); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; }
+        .highlight-title { font-size: 1.5rem; font-weight: 700; color: #92400e; margin-bottom: 1rem; }
+        .highlight-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+        .highlight-item { background: rgba(255, 255, 255, 0.8); padding: 1rem; border-radius: 8px; }
+        .footer { text-align: center; color: #6b7280; font-size: 0.875rem; padding: 2rem; border-top: 1px solid #e5e7eb; background: #f9fafb; }
         @media print {
             body { background: white; padding: 0; }
             .container { box-shadow: none; }
@@ -1092,133 +1101,115 @@ function downloadReport() {
 <body>
     <div class="container">
         <div class="header">
-            <h1>📊 Resume Analysis Report</h1>
-            <p>AI-Powered Analysis & Job Recommendations</p>
-            <div style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">
-                ${selectedFile.value?.name || 'Resume'} • Generated on ${currentDate}
+            <h1>🚀 Professional Resume Analysis Report</h1>
+            <p>AI-Powered Career Intelligence & Recommendations</p>
+            <div class="meta">
+                📄 ${selectedFile.value?.name || 'Resume'} • 📅 Generated on ${currentDate}
             </div>
         </div>
         
         <div class="content">
-            <!-- Overall Score -->
+            <!-- Contact Information -->
+            ${parsedData.value?.contact_info || parsedData.value?.contact_information ? `
             <div class="section">
-                <h2 class="section-title">📈 Overall Completeness Score</h2>
-                <div class="score-section">
-                    <div class="score-display">
-                        <h3 style="font-size: 1.25rem; font-weight: 600;">Resume Completeness Analysis</h3>
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div class="score-number">${analysisResult.value.overall_completeness_score?.toFixed(1)}%</div>
-                            <div class="score-label">${getScoreLabel(analysisResult.value.overall_completeness_score)}</div>
-                        </div>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill"></div>
-                    </div>
+                <h2 class="section-title">👤 Contact Information</h2>
+                <div class="contact-info">
+                    ${Object.entries(parsedData.value?.contact_info || parsedData.value?.contact_information || {}).map(([key, value]) => 
+                        value ? `<div class="info-row">
+                            <span class="info-label">${key.charAt(0).toUpperCase() + key.slice(1).replace('_', ' ')}</span>
+                            <span class="info-value">${value}</span>
+                        </div>` : ''
+                    ).join('')}
                 </div>
             </div>
+            ` : ''}
 
-            <!-- Key Insights -->
+            <!-- Resume Improvement Recommendations -->
+            ${originalParsedData.value?.summary_recommendations?.length ? `
             <div class="section">
-                <h2 class="section-title">🔍 Key Insights</h2>
-                <div class="grid">
-                    <!-- Missing Sections -->
-                    <div class="card orange">
-                        <div class="card-title">
-                            <span>⚠️</span>
-                            <span>Missing Sections</span>
-                        </div>
-                        ${analysisResult.value.missing_sections?.length ? 
-                            analysisResult.value.missing_sections.map((section: string) => 
-                                `<div class="missing-item">
-                                    <div class="bullet orange"></div>
-                                    <span>${formatSectionName(String(section))}</span>
-                                </div>`
-                            ).join('') :
-                            '<div style="display: flex; align-items: center; gap: 0.5rem;"><span>✅</span><span style="color: #166534; font-weight: 500;">All sections complete!</span></div>'
-                        }
+                <h2 class="section-title">💡 Resume Improvement Recommendations</h2>
+                <p style="color: #6b7280; margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.6;">Based on your original uploaded resume content</p>
+                
+                <div style="background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                        <span style="color: #92400e;">📄</span>
+                        <p style="color: #92400e; font-weight: 600; margin: 0; font-size: 0.875rem;">About these recommendations</p>
                     </div>
-
-                    <!-- Action Verbs -->
-                    <div class="card blue">
-                        <div class="card-title">
-                            <span>⚡</span>
-                            <span>Action Verbs Analysis</span>
-                        </div>
-                        <p style="color: #1e40af; line-height: 1.5;">${analysisResult.value.action_verb_check}</p>
-                    </div>
+                    <p style="color: #92400e; font-size: 0.75rem; margin: 0; line-height: 1.5;">These recommendations are based on your original uploaded resume, not the edited data in the review stage. They help identify areas for improvement in your resume content and structure.</p>
                 </div>
-            </div>
-
-            <!-- Recommendations -->
-            <div class="section">
-                <h2 class="section-title">💡 Recommendations</h2>
-                <div class="card green">
-                    ${analysisResult.value.suggestions?.length ? 
-                        analysisResult.value.suggestions.map((suggestion: string, index: number) =>
-                            `<div class="suggestion-item">
-                                <div class="suggestion-number">${index + 1}</div>
-                                <p style="color: #14532d; line-height: 1.5;">${suggestion}</p>
+                
+                <div style="background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 2rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                        <span style="color: #f59e0b; font-size: 1.25rem;">💡</span>
+                        <h3 style="color: #1f2937; font-size: 1.125rem; font-weight: 600; margin: 0;">Improvement Suggestions</h3>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        ${originalParsedData.value.summary_recommendations.map((recommendation: string, index: number) =>
+                            `<div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+                                <div style="width: 1.5rem; height: 1.5rem; background: #f59e0b; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 0.125rem;">${index + 1}</div>
+                                <p style="color: #374151; line-height: 1.6; margin: 0; flex: 1;">${recommendation}</p>
                             </div>`
-                        ).join('') :
-                        '<div style="display: flex; align-items: center; gap: 0.5rem;"><span>✨</span><span style="color: #166534; font-weight: 500;">Your resume looks great!</span></div>'
-                    }
+                        ).join('')}
+                    </div>
                 </div>
             </div>
+            ` : ''}
 
-            <!-- Company Recommendations -->
+            <div class="divider"></div>
+
+            <!-- Job Recommendations -->
+            ${jobMatches.value?.length ? `
             <div class="section">
-                <h2 class="section-title">🏢 Recommended Companies</h2>
-                <div class="company-grid">
-                    ${companyRecommendations.value.map(company => 
-                        `<div class="company-card">
-                            <div class="company-header">
-                                <div class="company-logo">${company.name.charAt(0)}</div>
-                                <div class="company-info">
-                                    <h3>${company.name}</h3>
-                                    <p style="color: #6b7280; font-size: 0.875rem;">${company.industry}</p>
-                                    <div class="company-tags">
-                                        <span class="tag blue">${company.size}</span>
-                                        <span class="tag green">${company.match}% match</span>
-                                    </div>
-                                </div>
+                <h2 class="section-title">🎯 Job Recommendations</h2>
+                <p style="margin-bottom: 2rem; color: #6b7280; font-size: 1.1rem;">Based on your profile, here are positions that align with your experience and skills:</p>
+                ${jobMatches.value.slice(0, 6).map(job => 
+                    `<div class="job-card">
+                        <div class="job-header">
+                            <div style="flex: 1;">
+                                <div class="job-title">${job.job_title}</div>
+                                <div class="job-company">${job.company} • ${job.location}</div>
                             </div>
-                            <p style="color: #374151; font-size: 0.875rem; line-height: 1.5; margin-bottom: 1rem;">${company.description}</p>
-                            <div style="margin-bottom: 0.75rem;">
-                                <strong style="color: #374151; font-size: 0.75rem;">Required Skills:</strong>
-                                <span style="color: #6b7280; font-size: 0.75rem; margin-left: 0.25rem;">${company.requiredSkills.join(', ')}</span>
+                            <div class="job-match">${Math.round(job.score * 100)}% match</div>
+                        </div>
+                        <p style="color: #4b5563; margin-bottom: 1rem; line-height: 1.6;">${job.job_description.substring(0, 200)}...</p>
+                        <div class="job-tags">
+                            <span class="tag blue">${job.category}</span>
+                            <span class="tag purple">${job.type}</span>
+                            ${job.salary ? `<span class="tag green">${job.salary}</span>` : ''}
+                        </div>
+                    </div>`
+                ).join('')}
+            </div>
+            ` : companyRecommendations.value?.length ? `
+            <div class="section">
+                <h2 class="section-title">🏢 Company Recommendations</h2>
+                <div class="grid">
+                    ${companyRecommendations.value.slice(0, 6).map(company => 
+                        `<div class="card highlight">
+                            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">${company.name}</h3>
+                            <p style="color: #6b7280; margin-bottom: 1rem;">${company.industry}</p>
+                            <div style="margin-bottom: 1rem;">
+                                <span class="tag blue">${company.size}</span>
+                                <span class="tag green">${company.match}% match</span>
                             </div>
-                            <div>
-                                <strong style="color: #374151; font-size: 0.75rem;">Experience Level:</strong>
-                                <span style="color: #6b7280; font-size: 0.75rem; margin-left: 0.25rem;">${company.experienceLevel}</span>
+                            <p style="color: #4b5563; font-size: 0.9rem; margin-bottom: 1rem;">${company.description}</p>
+                            <div style="border-top: 1px solid #e5e7eb; padding-top: 1rem;">
+                                <strong style="color: #374151;">Required Skills:</strong>
+                                <p style="color: #6b7280; font-size: 0.875rem;">${company.requiredSkills.join(', ')}</p>
                             </div>
                         </div>`
                     ).join('')}
                 </div>
             </div>
+            ` : ''}
 
-            <!-- Resume Summary -->
-            <div class="section">
-                <h2 class="section-title">📋 Resume Summary</h2>
-                <div class="grid">
-                    <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
-                        <strong>Sections Found:</strong> ${getStructuredSectionCount()}
-                    </div>
-                    <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
-                        <strong>Experience Words:</strong> ${getStructuredExperienceWords()}
-                    </div>
-                    <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
-                        <strong>Skills Listed:</strong> ${getSkillCount(parsedData.value?.skills || '')}
-                    </div>
-                    <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
-                        <strong>Education Level:</strong> ${getEducationLevel(parsedData.value?.education || '')}
-                    </div>
-                </div>
-            </div>
+
         </div>
         
         <div class="footer">
-            <p>Generated by Smart Resume Analyzer • ${currentDate}</p>
-            <p style="margin-top: 0.5rem;">This report provides AI-powered insights to help improve your resume and career prospects.</p>
+            <p><strong>Generated by Smart Resume Analyzer</strong> • ${currentDate}</p>
+            <p style="margin-top: 0.5rem;">This comprehensive report provides AI-powered insights to accelerate your career growth.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.75rem; opacity: 0.8;">💡 Keep this report for reference and track your progress as you implement the recommendations.</p>
         </div>
     </div>
 </body>
