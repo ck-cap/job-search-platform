@@ -77,4 +77,11 @@ User Interface         Google Gemini AI        Job Matching Models
 
 ---
 
-*Built with ❤️ using modern web technologies and AI* 
+<img width="1629" alt="image" src="https://github.com/user-attachments/assets/c61ce7a9-1027-4f7d-8502-a98328a158f4" />
+
+## Not Covered Scope
+- Database, current using mock data to simulate
+- Some data was hardcoded as this is still a POC
+- Cron job not available as of now (model is ready)
+
+*Built with ❤️ using modern web technologies and AI, VibeCoding hehe* 
