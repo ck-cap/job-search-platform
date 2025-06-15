@@ -462,7 +462,19 @@
                     </div>
                   </div>
                   
-                  <p class="text-sm text-gray-700 mb-3 line-clamp-2">{{ job.job_description }}</p>
+                  <div class="mb-3">
+                    <p class="text-sm text-gray-700 leading-relaxed" 
+                       :class="{ 'line-clamp-2': !expandedDescriptions[job.job_id] }">
+                      {{ job.job_description }}
+                    </p>
+                    <button 
+                      v-if="job.job_description && job.job_description.length > 150"
+                      @click="toggleDescription(job.job_id)"
+                      class="text-sm text-indigo-600 hover:text-indigo-800 font-medium mt-1 transition-colors"
+                    >
+                      {{ expandedDescriptions[job.job_id] ? 'Show Less' : 'Show More' }}
+                    </button>
+                  </div>
                   
                   <div class="flex flex-wrap gap-2 mb-3">
                     <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -602,6 +614,9 @@ const isAnalysisExpanded = ref(true);
 const isCompanyRecsExpanded = ref(true);
 const isSummaryRecsExpanded = ref(true);
 const isJobRecsExpanded = ref(true);
+
+// Job description expansion states
+const expandedDescriptions = ref<Record<string, boolean>>({});
 
 // Session storage keys
 const SESSION_KEYS = {
@@ -859,6 +874,11 @@ function clearFile() {
   
   // Clear session storage
   clearSession();
+}
+
+// Toggle job description expansion
+function toggleDescription(jobId: string) {
+  expandedDescriptions.value[jobId] = !expandedDescriptions.value[jobId];
 }
 
 async function processResume() {
@@ -1171,7 +1191,7 @@ function downloadReport() {
                             </div>
                             <div class="job-match">${Math.round(job.score * 100)}% match</div>
                         </div>
-                        <p style="color: #4b5563; margin-bottom: 1rem; line-height: 1.6;">${job.job_description.substring(0, 200)}...</p>
+                        <p style="color: #4b5563; margin-bottom: 1rem; line-height: 1.6;">${job.job_description}</p>
                         <div class="job-tags">
                             <span class="tag blue">${job.category}</span>
                             <span class="tag purple">${job.type}</span>
