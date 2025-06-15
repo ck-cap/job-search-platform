@@ -684,90 +684,66 @@ const progressSteps = [
 // File input ref
 const fileInput = ref<HTMLInputElement | null>(null);
 
-// Company recommendations (mock data - in real app this would come from API)
-const companyRecommendations = computed(() => {
-  if (!parsedData.value) return [];
+// Company recommendations data
+const companyRecommendations = ref([]);
+const isLoadingCompanyRecommendations = ref(false);
+
+// Function to fetch personalized company recommendations
+async function fetchCompanyRecommendations() {
+  if (!parsedData.value) {
+    companyRecommendations.value = [];
+    return;
+  }
   
-  // Generate recommendations based on parsed data
-  const skills = extractSkills(parsedData.value.skills || {});
-  const experienceYears = extractExperienceYears(parsedData.value.experience || {});
+  isLoadingCompanyRecommendations.value = true;
   
-  const allCompanies = [
-    {
-      id: 1,
-      name: 'TechCorp Solutions',
-      industry: 'Technology',
-      size: 'Mid-size (100-500)',
-      match: 92,
-      description: 'Leading software development company specializing in enterprise solutions.',
-      requiredSkills: ['JavaScript', 'Python', 'React', 'Node.js'],
-      experienceLevel: '2-5 years'
-    },
-    {
-      id: 2,
-      name: 'DataMinds Analytics',
-      industry: 'Data Science',
-      size: 'Large (500+)',
-      match: 88,
-      description: 'Data analytics and machine learning company helping businesses make data-driven decisions.',
-      requiredSkills: ['Python', 'SQL', 'Machine Learning', 'Data Analysis'],
-      experienceLevel: '3-6 years'
-    },
-    {
-      id: 3,
-      name: 'CloudFirst Technologies',
-      industry: 'Cloud Computing',
-      size: 'Startup (<100)',
-      match: 85,
-      description: 'Innovative cloud infrastructure solutions for modern businesses.',
-      requiredSkills: ['AWS', 'Docker', 'Kubernetes', 'DevOps'],
-      experienceLevel: '1-4 years'
-    },
-    {
-      id: 4,
-      name: 'InnovateLab Inc',
-      industry: 'Research & Development',
-      size: 'Mid-size (100-500)',
-      match: 82,
-      description: 'R&D company focused on emerging technologies and innovation.',
-      requiredSkills: ['Research', 'Innovation', 'Project Management', 'Analysis'],
-      experienceLevel: '2-5 years'
-    },
-    {
-      id: 5,
-      name: 'GrowthTech Ventures',
-      industry: 'FinTech',
-      size: 'Large (500+)',
-      match: 79,
-      description: 'Financial technology company revolutionizing digital payments and banking.',
-      requiredSkills: ['Finance', 'Technology', 'Security', 'Compliance'],
-      experienceLevel: '3-7 years'
-    },
-    {
-      id: 6,
-      name: 'NextGen Robotics',
-      industry: 'Robotics & AI',
-      size: 'Mid-size (100-500)',
-      match: 76,
-      description: 'Cutting-edge robotics and AI solutions for industrial automation.',
-      requiredSkills: ['AI', 'Robotics', 'Programming', 'Engineering'],
-      experienceLevel: '1-5 years'
+  try {
+    // Generate recommendations based on parsed data
+    const skills = extractSkills(parsedData.value.skills || {});
+    const experienceYears = extractExperienceYears(parsedData.value.experience || {});
+    
+    // Fetch companies from API
+    const API_BASE_URL = process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:8000'
+    const response = await fetch(`${API_BASE_URL}/companies?limit=6&page=1`)
+    
+    if (response.ok) {
+      const data = await response.json()
+      // Handle both old format (array) and new format (object with pagination)
+      const companies = Array.isArray(data) ? data : (data.companies || [])
+      
+      // Filter based on user skills if available
+      if (skills.length > 0) {
+        companyRecommendations.value = companies.filter(company => {
+          const hasRelevantIndustry = skills.some(skill => 
+            company.industry.toLowerCase().includes(skill.toLowerCase()) ||
+            company.description.toLowerCase().includes(skill.toLowerCase())
+          );
+          return hasRelevantIndustry || company.match > 75;
+        }).slice(0, 6);
+      } else {
+        companyRecommendations.value = companies.slice(0, 6);
+      }
+    } else {
+      throw new Error('Failed to fetch companies');
     }
-  ];
-  
-  // Filter and sort companies based on user profile
-  return allCompanies
-    .filter(company => {
-      // Basic filtering logic based on skills and experience
-      const hasMatchingSkills = company.requiredSkills.some(skill => 
-        skills.some(userSkill => userSkill.toLowerCase().includes(skill.toLowerCase()) || 
-                              skill.toLowerCase().includes(userSkill.toLowerCase()))
-      );
-      return hasMatchingSkills || company.match > 75;
-    })
-    .sort((a, b) => b.match - a.match)
-    .slice(0, 6);
-});
+  } catch (error) {
+    console.error('Error fetching companies:', error)
+    
+    // Fallback data if API fails
+    companyRecommendations.value = [
+      {
+        id: 1,
+        name: 'TechCorp Solutions',
+        industry: 'Technology',
+        size: 'Mid-size (100-500)',
+        match: 92,
+        description: 'Leading software development company specializing in enterprise solutions.'
+      }
+    ];
+  } finally {
+    isLoadingCompanyRecommendations.value = false;
+  }
+}
 
 // Session storage functions
 function saveToSession() {
@@ -918,6 +894,9 @@ async function processResume() {
       
       // Clear any previous errors
       parseError.value = null;
+      
+      // Fetch company recommendations
+      await fetchCompanyRecommendations();
       
       currentView.value = 'confirmation';
       scrollToTop(); // Scroll to top for better UX
@@ -1213,10 +1192,10 @@ function downloadReport() {
                                 <span class="tag green">${company.match}% match</span>
                             </div>
                             <p style="color: #4b5563; font-size: 0.9rem; margin-bottom: 1rem;">${company.description}</p>
-                            <div style="border-top: 1px solid #e5e7eb; padding-top: 1rem;">
-                                <strong style="color: #374151;">Required Skills:</strong>
-                                <p style="color: #6b7280; font-size: 0.875rem;">${company.requiredSkills.join(', ')}</p>
-                            </div>
+                                                          <div style="border-top: 1px solid #e5e7eb; padding-top: 1rem;">
+                                  <strong style="color: #374151;">Company Details:</strong>
+                                  <p style="color: #6b7280; font-size: 0.875rem;">${company.industry} • ${company.size}</p>
+                              </div>
                         </div>`
                     ).join('')}
                 </div>

@@ -21,12 +21,12 @@
           
           <div class="space-y-2 sm:space-y-3">
             <div class="text-xs text-gray-600">
-              <span class="font-semibold text-gray-700">Required Skills:</span> 
-              <span class="ml-1 break-words">{{ company.requiredSkills.join(', ') }}</span>
+              <span class="font-semibold text-gray-700">Industry:</span> 
+              <span class="ml-1">{{ company.industry }}</span>
             </div>
             <div class="text-xs text-gray-600">
-              <span class="font-semibold text-gray-700">Experience Level:</span> 
-              <span class="ml-1">{{ company.experienceLevel }}</span>
+              <span class="font-semibold text-gray-700">Company Size:</span> 
+              <span class="ml-1">{{ company.size }}</span>
             </div>
           </div>
         </div>
@@ -52,8 +52,6 @@ interface Company {
   size: string;
   match: number;
   description: string;
-  requiredSkills: string[];
-  experienceLevel: string;
 }
 
 interface Props {

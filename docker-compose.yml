@@ -36,6 +36,7 @@ services:
     volumes:
       # Mount source code for hot reloading
       - ./services/backend-api/main.py:/app/main.py
+      - ./services/mock-data/:/app/mock-data
     command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
     networks:
       - job-search-network
