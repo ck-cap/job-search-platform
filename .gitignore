@@ -64,7 +64,7 @@ dist/
 build/
 
 # Frontend specific (services/frontent)
-services/frontent/.nuxt/
+services/frontend/.nuxt/
 services/frontent/.output/
 services/frontent/dist/
 
