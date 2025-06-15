@@ -11,7 +11,7 @@ services:
       - DATASET_PATH=${DATASET_PATH}
     volumes:
       - ./services/model-service/model:/app/model
-      - ./services/model-service/dataset:/app/dataset
+      - ./services/mock-data/job_vacancy.csv:/app/dataset/job_vacancy.csv
     deploy:
       resources:
         limits:

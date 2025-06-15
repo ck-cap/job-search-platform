@@ -27,7 +27,7 @@ async def lifespan(app: FastAPI):
     logger.info("Starting model service...")
     try:
         MODEL_PATH = os.environ.get("MODEL_PATH", "/app/model/fine_tuned_mpnet_with_eval")
-        DATASET_PATH = os.environ.get("DATASET_PATH", "/app/dataset/mpnet_finetune_dataset_test.csv")
+        DATASET_PATH = os.environ.get("DATASET_PATH", "/app/dataset/job_vacancy.csv")
         
         # Check if files exist before loading
         if not os.path.exists(MODEL_PATH):

@@ -21,8 +21,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy model-related files
 COPY model.py .
 COPY model_service.py .
-COPY model/ ./model/
-COPY dataset/ ./dataset/
 
 # Set environment variables for better memory management
 ENV PYTHONUNBUFFERED=1
