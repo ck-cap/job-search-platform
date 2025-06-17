@@ -494,12 +494,23 @@
                       <br>
                       <span>Listed: {{ new Date(job.listingDate).toLocaleDateString() }}</span>
                     </div>
-                    <NuxtLink 
-                      :to="`/company/${job.company.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}`"
-                      class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 transition-colors"
-                    >
-                      <span>View Company</span>
-                    </NuxtLink>
+                    <div class="flex space-x-2">
+                      <NuxtLink 
+                        :to="`/company/${job.company.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}`"
+                        class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                      >
+                        View Company
+                      </NuxtLink>
+                      <NuxtLink 
+                        :to="`/apply/${job.job_id}`"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 transition-colors"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        <span>Apply Now</span>
+                      </NuxtLink>
+                    </div>
                   </div>
                 </div>
               </div>

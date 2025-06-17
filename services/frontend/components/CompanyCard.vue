@@ -32,12 +32,12 @@
         </div>
         
         <div class="pt-3 sm:pt-4 border-t border-gray-100 mt-auto">
-          <button 
-            @click="viewOpportunities"
+          <NuxtLink 
+            :to="`/company/${company.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}`"
             class="w-full py-2 sm:py-3 px-3 sm:px-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold text-xs sm:text-sm rounded-lg transition-all duration-300 shadow-soft hover:shadow-medium transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 min-h-[2.5rem] sm:min-h-[3rem] flex items-center justify-center"
           >
             View Opportunities
-          </button>
+          </NuxtLink>
         </div>
       </div>
     </div>
@@ -59,10 +59,4 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
-function viewOpportunities() {
-  // In a real application, this would navigate to the company's opportunities page
-  // For now, we'll just show an alert
-  alert(`Opening opportunities for ${props.company.name}...`);
-}
 </script> 

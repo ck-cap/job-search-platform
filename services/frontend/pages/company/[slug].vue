@@ -203,9 +203,15 @@
                       {{ skill }}
                     </span>
                   </div>
-                  <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                    Apply Now
-                  </button>
+                  <NuxtLink 
+                    :to="`/apply/${job.job_id}`"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-2"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    <span>Apply Now</span>
+                  </NuxtLink>
                 </div>
               </div>
             </div>
@@ -214,7 +220,7 @@
           <!-- Reviews Section -->
           <div class="bg-white rounded-xl shadow-soft p-6">
             <div class="flex items-center justify-between mb-6">
-              <h2 class="text-2xl font-bold text-gray-900">Summarize reviews</h2>
+              <h2 class="text-2xl font-bold text-gray-900">Employee reviews you might be interested in</h2>
             </div>
             
             <!-- Reviews Summary -->
